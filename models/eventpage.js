@@ -1,11 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const isUrl = require("isurl");
+const validUrl = require("valid-url");
 
-const eventSchema = new mongoose.GridFs({
+const eventSchema = new mongoose.Schema({
+    title:{
+        type:String,
+        required:[true, 'Please Enter Title']
+    }, 
     url:{
         type:String,
-        required:[true, 'Provide a Register Link']
+        required:[true, 'Provide a Register Link'],
+        validUrl:[validUrl.isUri(this.url), 'Url is not valid']
     },
     date:{
         type:Date,
@@ -20,17 +25,13 @@ const eventSchema = new mongoose.GridFs({
             name:String,
             aboutspeaker:String,
             photo:String
-        }
+        },
     ],
     moderoter:{
         name:String,
         aboutmoderoter:String,
         photo:String
     },
-    tags:[String],
-    desc:{
-        type:GridFs,
-    }
 })
 
 const Event = mongoose.model('Event', eventSchema);
